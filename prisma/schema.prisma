@@ -2,8 +2,8 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id      Int      @id
+model Member {
+  id      String   @id
   xp      Int      @default(0)
   level   Int      @default(0)
   Mutes   Mute?
@@ -12,8 +12,8 @@ model User {
 }
 
 model Mute {
-  member   User     @relation(fields: [memberId], references: [id])
-  memberId Int      @unique
+  member   Member   @relation(fields: [memberId], references: [id])
+  memberId String   @unique
   muteId   Int      @id @default(autoincrement())
   reason   String
   time     DateTime @default(now())
@@ -22,8 +22,8 @@ model Mute {
 }
 
 model Tempban {
-  member   User     @relation(fields: [memberId], references: [id])
-  memberId Int      @unique
+  member   Member   @relation(fields: [memberId], references: [id])
+  memberId String   @unique
   banId    Int      @id @default(autoincrement())
   reason   String
   time     DateTime @default(now())
@@ -40,8 +40,8 @@ model ReactionRoles {
 }
 
 model Warns {
-  member   User     @relation(fields: [memberId], references: [id])
-  memberId Int
+  member   Member   @relation(fields: [memberId], references: [id])
+  memberId String
   warnId   Int      @id @default(autoincrement())
   reason   String
   time     DateTime @default(now())

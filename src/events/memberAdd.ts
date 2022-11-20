@@ -5,9 +5,9 @@ export default class GuildMemberAdd {
     public event = Events.GuildMemberAdd;
 
     public async run(client: Eleceed, member: GuildMember) {
-        client.db.user.create({
+        client.db.member.create({
             data: {
-                id: parseInt(member.id),
+                id: member.id,
             }
         });
 
