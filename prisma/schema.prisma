@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id      Int      @id
+  xp      Int      @default(0)
+  level   Int      @default(0)
+  Mutes   Mute?
+  Tempban Tempban?
+  Warns   Warns[]
+}
+
+model Mute {
+  member   User     @relation(fields: [memberId], references: [id])
+  memberId Int      @unique
+  muteId   Int      @id @default(autoincrement())
+  reason   String
+  time     DateTime @default(now())
+  duration Int
+  active   Boolean  @default(true)
+}
+
+model Tempban {
+  member   User     @relation(fields: [memberId], references: [id])
+  memberId Int      @unique
+  banId    Int      @id @default(autoincrement())
+  reason   String
+  time     DateTime @default(now())
+  duration Int
+  active   Boolean  @default(true)
+}
+
+model ReactionRoles {
+  id      Int     @id @default(autoincrement())
+  message String
+  emoji   String
+  role    String
+  active  Boolean @default(true)
+}
+
+model Warns {
+  member   User     @relation(fields: [memberId], references: [id])
+  memberId Int
+  warnId   Int      @id @default(autoincrement())
+  reason   String
+  time     DateTime @default(now())
+  active   Boolean  @default(true)
+}
+
+model Meta {
+  id    Int    @id @default(autoincrement())
+  key   String
+  value String
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
