@@ -19,10 +19,12 @@ export default class ReadyEvent {
     public async run(client: Eleceed) {
         await client.user?.setPresence({ activities: [{ name: `${client.guilds.cache.get("1041770531193638974")?.memberCount} members | https://rithul.dev/discord`, type: ActivityType.Watching }] });
         await client.user?.setStatus("online");
-        await update_twitter_count(client)
-        setInterval(async () => {
-            await update_twitter_count(client);
-        }, 600000);
+        if (process.env.ENVIRONMENT == "prod") {
+            await update_twitter_count(client)
+            setInterval(async () => {
+                await update_twitter_count(client);
+            }, 600000);
+        }
     }
 };
 

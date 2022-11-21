@@ -6,8 +6,7 @@ export class Embed extends EmbedBuilder {
         super();
         this.setFooter(
             {
-                text: "Eleceed",
-                iconURL: "https://cdn.discordapp.com/avatars/1043848355433951273/8b0b2b2b0b2b0b2b0b2b0b2b0b2b0b2b.png",
+                text: "Eleceed"
             }
         );
         this.setTimestamp();
@@ -17,5 +16,11 @@ export class Embed extends EmbedBuilder {
 
         })
         this.setColor("Random")
+    }
+
+    public UserLog(user: string, action: string, reason: string) {
+        this.setDescription(`**User:** ${user}\n**Action:** ${action}\n**Reason:** ${reason}`);
+        this.setColor("#ffd500");
+        return this;
     }
 }
