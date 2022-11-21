@@ -16,5 +16,6 @@ export class Embed extends EmbedBuilder {
             url: "https://rithul.dev",
 
         })
+        this.setColor("Random")
     }
 }

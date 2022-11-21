@@ -27,7 +27,11 @@ export class Eleceed extends Client {
         await this.login(token);
         await this.user?.setStatus("dnd");
         Logger.success("Bot started successfully.");
-        this.loadEvents();
+
+        ["events", "commands"].forEach(async (h) => {
+            const handler = await import(`./handlers/${h}`);
+            handler.default(this);
+        });
         return this;
     }
 
@@ -40,23 +44,16 @@ export class Eleceed extends Client {
     }
 
     public async loadCommands() {
-        const slashCommands = readdirSync(path.join(__dirname, "..", "commands")).filter((file) => file.endsWith(".ts"));
-        for (const file of slashCommands) {
-            const { command } = await import(path.join(__dirname, "..", "commands", `${file}`));
-            this.commands.set(command.data.name, command);
-            Logger.info(`Loaded slash command ${command.data.name}`);
-        }
-    }
-
-    public async loadEvents() {
-        const events = readdirSync(path.join(__dirname, "events")).filter((file) => file.endsWith(".ts"));
-        for (const file of events) {
-            let Event = await import(path.join(__dirname, "events", `${file}`));
-            Event = new Event.default();
-            if (Event.once) {
-                this.once(Event.event, async (...args) => await Event.run(this, ...args));
-            } else {
-                this.on(Event.event, async (...args) => await Event.run(this, ...args));
+        const commands = readdirSync(path.join(__dirname, "commands"));
+        for (const category of commands) {
+            const commandFiles = readdirSync(path.join(__dirname, "commands", category)).filter((file) => file.endsWith(".ts"));
+            for (const file of commandFiles) {
+                let Command = await import(path.join(__dirname, "commands", category, `${file}`));
+                Command = new Command.default();
+                this.commands.set(Command.name, Command);
+                Command.aliases.forEach((alias: string) => {
+                    this.aliases.set(alias, Command.name);
+                });
             }
         }
     }
