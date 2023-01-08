@@ -1,4 +1,4 @@
-import { ActivityType, Client, GatewayIntentBits, TextChannel, Collection } from "discord.js";
+import { ActivityType, Client, GatewayIntentBits, TextChannel, Collection, Guild } from "discord.js";
 import { readdirSync } from "fs";
 import path from "path";
 import Logger from "utils/logger";
@@ -9,6 +9,7 @@ export class Eleceed extends Client {
     public aliases = new Collection();
     public ready = false;
     public db = new PrismaClient();
+    public guild: Guild | undefined = undefined;
 
     constructor() {
         const clientOptions = {
@@ -23,9 +24,10 @@ export class Eleceed extends Client {
             Logger.error("No token provided.");
             process.exit(1);
         };
-        await this.user?.setPresence({ activities: [{ name: "myself start up...", type: ActivityType.Watching }] });
+        this.user?.setPresence({ activities: [{ name: "myself start up...", type: ActivityType.Watching }] });
         await this.login(token);
-        await this.user?.setStatus("dnd");
+        this.guild = this.guilds.cache.get("1041770531193638974")
+        this.user?.setStatus("dnd");
         Logger.success("Bot started successfully.");
 
         ["events", "commands"].forEach(async (h) => {
@@ -35,12 +37,9 @@ export class Eleceed extends Client {
         return this;
     }
 
-    public async verify(id?: number) {
-        const channel: TextChannel = this.channels.cache.get("1043848355433951273") as TextChannel;
-        if (!channel) return;
-        // send a message to channel
-        const message = await channel.send("Verifying...");
-
+    public async verify(id: string) {
+        const member = await this.guild?.members.fetch(id);
+        member?.roles.add("1042058669304594432")
     }
 
     public async loadCommands() {
