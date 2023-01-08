@@ -17,8 +17,12 @@ export default class ReadyEvent {
     public event = Events.ClientReady;
 
     public async run(client: Eleceed) {
-        await client.user?.setPresence({ activities: [{ name: `${client.guilds.cache.get("1041770531193638974")?.memberCount} members | https://rithul.dev/discord`, type: ActivityType.Watching }] });
+        const membercount = client.guilds.cache.get("1041770531193638974")?.memberCount;
+        await client.user?.setPresence({ activities: [{ name: `${membercount} members | https://rithul.dev/discord`, type: ActivityType.Watching }] });
         await client.user?.setStatus("online");
+        const memCountChannel = client.channels.cache.get("1042079879480475758") as VoiceChannel;
+        if (!memCountChannel) return;
+        await memCountChannel.setName(`Humans: ${membercount && membercount - 1}`);
         if (process.env.ENVIRONMENT == "prod") {
             await update_twitter_count(client)
             setInterval(async () => {

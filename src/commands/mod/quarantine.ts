@@ -41,7 +41,7 @@ module.exports = {
             const reason = interaction.options.getString("reason");
             await interaction.guild.members.cache.get(user.id).roles.add("1042058363296559214");
             interaction.reply({ content: `Added ${user} to quarantine`, ephemeral: true });
-            const embed = new Embed().UserLog(user.tag, "User Quarantined", reason);
+            const embed = new Embed().UserLog(user.tag, "User Quarantined", reason ? reason : "N/A");
             logChannel.send({ embeds: [embed] });
         } else if (interaction.options.getSubcommand() === "remove") {
             const user = interaction.options.getUser("user");

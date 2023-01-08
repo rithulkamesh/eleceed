@@ -5,10 +5,12 @@ import { REST, Routes } from "discord.js";
 import Logger from "utils/logger";
 
 export default async function loadCommands(client: Eleceed) {
+    console.log("\n")
     const commands = [];
     for (const i of readdirSync(path.join(__dirname, "..", "commands"))) {
         for (const j of readdirSync(path.join(__dirname, "..", "commands", i))) {
             const command = await import(`../commands/${i}/${j}`);
+            if (!command.data) continue;
             await client.commands.set(command.data.name, command);
             Logger.info("Found command " + command.data.name);
             commands.push(command.data.toJSON());
